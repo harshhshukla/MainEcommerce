@@ -1,0 +1,259 @@
+{% extends "homepage\basic.html" %}
+
+{% load static %}
+
+{% block title %}
+List
+{% endblock title %}
+
+
+{% block head %}
+ 
+   <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css'>
+<link rel="stylesheet" href="{% static 'css/details.css' %}">
+
+{% endblock head %}
+
+{% block css %}
+
+{% endblock css %}
+
+{% block body %}
+
+<div class="container  ">
+<br>
+<br>
+<br>
+<br>
+<br>
+    <div class="col-lg-12 border p-3 main-section   ">
+    <div class=" pt-4 text-dark px-3  productdetails">
+      <h3 class="d-flex flex-start ml-5 text-dark">Product Details</h3>
+
+        <div class="row hedding m-0 pl-3 pt-0 pb-3">
+                  <ol class="breadcrumb pl-0 ml-5 product_details ">
+                        <li class="breadcrumb-item text-primary"><a href="#">Home</a></li>
+                        <li class="breadcrumb-item  text-primary"><a href="/mens">Mens</a></li>
+                        <li class="breadcrumb-item active text-dark" aria-current="page">Details</li>
+                    </ol>
+     </div>   
+        </div>
+        <br>
+                {% if error == "null" %}
+
+        <div class="row m-0">
+            <div class="col-lg-4 left-side-product-box pb-3">
+                <img src="/media/{{data.image}}" class="border p-3 img-fluid">
+            
+            </div>
+            <div class="col-lg-8">
+                <div class="right-side-pro-detail border p-3 m-0">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <span>Who What Wear</span>
+                            <h2 class="m-0 p-0">{{data.title}}</h2>
+                        </div>
+                        <div class="col-lg-12">
+                            <h3 class="m-0 p-0 price-pro">₹ {{data.price}}</h3>
+                            <hr class="p-0 m-0">
+                        </div>
+                        <div class="col-lg-12 pt-2">
+                            <h5>Product Detail</h5>
+                            <span>{{data.descriptions}}</span>
+                            <hr class="m-0 pt-2 mt-2">
+                        </div>
+                        <div class="col-lg-12">
+                            <p class="tag-section"><strong>Tag : </strong><a href="/mens">Mens</a></p>
+                        </div>
+                        {% comment %} Size added here starts  {% endcomment %}
+                        
+                        <label for="floatingSelectGrid" class="mt-1">Size: </label>
+                        <div class="form-floating col-md-6 mb-4 ">
+
+                          <select class="form-select-sm" name="rate" id="sizehai"
+                            aria-label="Floating label select example">
+                            <option selected>Choose the size</option>
+                            <option value="1">1UK</option>
+                            <option value="2">2UK</option>
+                            <option value="3">3UK</option>
+                            <option value="4">4UK</option>
+                            <option value="5">5UK</option>
+                            <option value="6">6UK</option>
+                            <option value="7">7UK</option>
+                            <option value="8">8UK</option>
+                            <option value="9">9UK</option>
+                            <option value="10">10UK</option>
+                          </select>
+                        </div>
+                        {% comment %} Size added here ends  {% endcomment %}
+ 
+                        <div class="col-lg-12 mt-3">
+                            <div class="row">
+                                <div class="col-lg-12 pb-2">
+                                    <button  class="btn btn-success w-100" onclick="add_to_cart('{{data.id}}','{{data.title}}')">Add To Cart</button>
+                                </div>
+                                {% comment %} <div class="col-lg-6"> {% endcomment %}
+                                    {% comment %} <a href="/checkout" class="btn btn-success w-100">Shop Now</a> {% endcomment %}
+                                {% comment %} </div> {% endcomment %}
+                                
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+
+{%else%}
+<h1>Product doent exists</h1>
+{% endif %}
+
+{% comment %} reviews section starts here  {% endcomment %}
+    </div>
+{% if user.is_authenticated %}
+    <h3 class="d-flex flex-start mt-5 text-dark">Reviews   </h3>
+   <h5>Click here to add reviews <button type="button" class="card-link btn  btn-success mx-2 my-2" style="border-radius: 3px;"
+                    data-bs-toggle="modal" data-bs-target="#staffModal_{{d.id}}">
+                    Add review
+                  </button></h5>
+    {% comment %} displaying comments {% endcomment %}
+    <div>
+    <ul class="remarks-con">
+  
+      {% for review in reviews %}
+        <li class=" p-2">
+          <div class="post-comments">
+            <p class="meta"><h5><span class="badge bg-secondary">{{review.rate}} 	&#9733; </span></h5>  {{review.created_at}} <a href="#">{{review.user.username}}</a> says : </p>
+            <p>
+                {{review.comment}}
+            </p>
+        </div>
+        </li>
+      {% endfor %}
+    
+    
+    </ul>
+  </div>
+  
+
+  {% else %}
+  <div class="mt-5">
+   <center class="custt mt-5 " >You Need to login to post review <a class="text-primary" href="/login/">login</a> </center>
+  </div>
+   {% endif %}
+{% comment %} reviews section ends here  {% endcomment %}
+
+            
+
+
+
+
+
+
+
+{% comment %} Remark model starts {% endcomment %}
+ <!-- Staff modal -->
+        {% comment %} {% for d in data %} {% endcomment %}
+ 
+              <div class="modal fade" id="staffModal_{{d.id}}" tabindex="-1"
+                aria-labelledby="exampleModalLabel_{{d.id}}" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="exampleModalLabel_{{d.id}}">Add Reviews</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+
+
+                    <form action="/review"  method="GET">
+
+                      {% for prod in product %}
+
+                          <input type="hidden" name="prod_id" id="prod_id" value="{{prod.id}}"/>
+                                 
+                      {% endfor %}
+                      <div class="modal-body">
+                        <div class="form-floating m-2">
+                          <textarea class="form-control" placeholder="Leave a comment here" 
+                            style="height: 100px"  id="comment" name="comment"></textarea>
+                          <label for="floatingTextarea2">Reviews</label>
+                        </div>
+                        {% comment %} Reviews added here  {% endcomment %}
+                        <div class="form-floating m-2">
+                          <select class="form-select" name="rate" id="floatingSelectGrid"
+                            aria-label="Floating label select example">
+                            <option selected>Rate this Product</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                            <option value="8">8</option>
+                            <option value="9">9</option>
+                            <option value="10">10</option>
+                          </select>
+                          <label for="floatingSelectGrid">Select Rating</label>
+                        </div>
+
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-success">Submit</button>
+
+                      </div>
+                    </form>
+
+
+                  </div>
+                </div>
+              </div>
+        {% comment %} {% endfor %} {% endcomment %}
+
+{% comment %} Remark model ends {% endcomment %}
+  
+
+
+
+<!-- custom js file link  -->
+{% comment %} Cart logic code start here {% endcomment %}
+
+<script>
+
+const add_to_cart =(id,name)=>{
+
+
+  var cart = JSON.parse(localStorage.getItem("cart"))
+  var getValue = document. getElementById('sizehai'). selectedOptions[0]. value;
+
+  if (cart) {
+    if (cart[id]) {
+      cart[id] = { name: name, value: cart[id].value + 1,size:getValue };
+
+    } else {
+      cart[id] = { name: name, value: 1,size:getValue};
+    }
+  } else {
+    cart = { [id]: { name: name, value: 1,size:getValue } };
+
+  }
+
+localStorage.setItem("cart",JSON.stringify(cart))
+
+
+
+var value = JSON.parse(localStorage.getItem("cart"));
+
+document.getElementById("cartId").innerHTML = Object.keys(value).length
+}
+
+
+
+</script>
+{% comment %} Products ends  {% endcomment %}
+
+
+
+{% endblock body %}
